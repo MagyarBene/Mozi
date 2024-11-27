@@ -1,0 +1,81 @@
+```import React, { useState } from "react";
+import SearchBar from "../components/SearchBar";
+import { useQuery } from "@tanstack/react-query";
+import { getData } from "../utils";
+import { CircularProgress } from "@mui/material";
+import Content from "../components/Content";
+
+export default function SearchPage() {
+  const [keyword, setKeyword] = useState('');
+  const [type, setType] = useState('movie');
+
+  const searchLink = keyword
+    ? `https://api.themoviedb.org/3/search/${type}?query=${keyword}&page=1&api_key=${
+        import.meta.env.VITE_API_KEY
+      }`
+    : `https://api.themoviedb.org/3/${type}/popular?page=1&api_key=${
+        import.meta.env.VITE_API_KEY
+      }`;
+
+  const handleSearch = (query) => {
+    console.log("Search query:", query);
+    console.log(searchLink);
+  };
+
+  const { isError, error, isLoading, data } = useQuery({
+    queryKey: ["keyword", type, searchLink],
+    queryFn: getData,
+  });
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return (
+    <>
+      <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto", color: 'white' }}>
+        <SearchBar setKeyword={setKeyword} onSearch={handleSearch} />
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+        <button
+          style={{
+            margin: "0 10px",
+            padding: "10px 20px",
+            backgroundColor: "transparent", // Make background transparent
+            color: "#fff",
+            border: "none",
+            borderBottom: type === "movie" ? "2px solid #d8b4ff" : "2px solid transparent", // Add underline for selected
+            borderRadius: "0", // Optional: Remove rounded corners for transparency
+            cursor: "pointer",
+          }}
+          onClick={() => setType("movie")}
+        >
+          Movies
+        </button>
+        <button
+          style={{
+            margin: "0 10px",
+            padding: "10px 20px",
+            backgroundColor: "transparent", // Make background transparent
+            color: "#fff",
+            border: "none",
+            borderBottom: type === "tv" ? "2px solid #d8b4ff" : "2px solid transparent", // Add underline for selected
+            borderRadius: "0", // Optional: Remove rounded corners for transparency
+            cursor: "pointer",
+          }}
+          onClick={() => setType("tv")}
+        >
+          TV Shows
+        </button>
+      </div>
+      <div>
+        <Content url={searchLink} type={type} />
+      </div>
+    </>
+  );
+}
+```
