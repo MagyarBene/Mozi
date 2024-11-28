@@ -6,6 +6,7 @@ import { SingleChip } from './SingleChip'
 import Stack from '@mui/material/Stack';
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { Padding } from '@mui/icons-material'
 
 
 export const Genres = ({type,setUrlForGenres}) => {

@@ -33,3 +33,10 @@ a{
     box-shadow: 0 0 5px gray;
     pointer-events: none;
 }
+.searchdiv{
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
